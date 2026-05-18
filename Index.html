@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Altatweer Real Estate</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9A84C;--gold2:#E8C96A;--gold3:#9A7A2E;
+  --bg:#060606;--bg2:#0D0D0D;--bg3:#141414;--bg4:#1C1C1C;
+  --text:#F0EAD6;--muted:#7A7060;--muted2:#A89880;
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --arabic:'Tajawal',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;overflow-x:hidden;}
+
+/* LANG TOGGLE */
+.lang-toggle{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;display:flex;gap:0;pointer-events:auto;}
+.lang-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+.lang-overlay-title{font-family:'Playfair Display',serif;font-size:28px;color:#C9A84C;letter-spacing:2px;margin-bottom:8px;}
+.lang-overlay-sub{font-size:12px;color:#7A7060;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;}
+.lang-btn{padding:7px 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:1px solid rgba(201,168,76,0.35);background:transparent;color:var(--muted2);transition:all .3s;font-family:var(--sans);}
+.lang-btn.active{background:var(--gold);color:#060606;border-color:var(--gold);font-weight:600;}
+.lang-btn:first-child{border-right:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .5s,padding .4s;}
+nav.scrolled{background:rgba(6,6,6,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.12);padding:14px 60px;}
+.logo{font-family:var(--serif);font-size:24px;color:var(--gold);letter-spacing:1px;text-decoration:none;}
+.logo span{color:var(--text);font-weight:300;font-size:11px;display:block;letter-spacing:5px;text-transform:uppercase;margin-top:1px;}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{color:var(--muted2);text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;transition:color .3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 26px;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .3s;}
+.nav-cta:hover{background:var(--gold);color:var(--bg);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 40px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,168,76,0.07) 0%,transparent 70%),linear-gradient(180deg,#060606 0%,#0A0906 100%);}
+.grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);background-size:80px 80px;animation:gridFloat 20s linear infinite;}
+@keyframes gridFloat{0%{background-position:0 0;}100%{background-position:80px 80px;}}
+.gold-orb{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6;}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1;}}
+.hero-content{position:relative;z-index:2;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:32px;opacity:0;animation:fadeUp .8s .2s forwards;}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--gold);}
+.hero-eyebrow-text{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);}
+.hero h1{font-family:var(--serif);font-size:clamp(52px,8vw,100px);font-weight:700;line-height:1.0;margin-bottom:28px;opacity:0;animation:fadeUp .9s .4s forwards;}
+.hero h1 .line{display:block;overflow:hidden;}
+.hero h1 em{color:var(--gold);font-style:italic;}
+.hero h1 .outline-text{-webkit-text-stroke:1px rgba(201,168,76,0.5);color:transparent;}
+.hero-sub{font-size:16px;color:var(--muted2);max-width:500px;margin:0 auto 48px;font-weight:300;line-height:1.9;opacity:0;animation:fadeUp .9s .6s forwards;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .9s .8s forwards;}
+.btn-gold{background:var(--gold);color:var(--bg);padding:18px 44px;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;text-decoration:none;transition:all .35s;display:inline-block;position:relative;overflow:hidden;}
+.btn-gold::before{content:'';position:absolute;inset:0;background:var(--gold2);transform:translateX(-101%);transition:transform .35s;}
+.btn-gold:hover::before{transform:translateX(0);}
+.btn-gold span{position:relative;z-index:1;}
+.btn-ghost{border:1px solid rgba(201,168,76,0.4);color:var(--gold);padding:18px 44px;font-size:11px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;transition:all .35s;display:inline-block;}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(201,168,76,0.06);}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .9s 1.2s forwards;}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollAnim 2s ease-in-out infinite;}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+.scroll-text{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);}
+.hero-stats-bar{position:absolute;bottom:0;left:0;width:100%;border-top:1px solid rgba(201,168,76,0.1);display:grid;grid-template-columns:repeat(4,1fr);opacity:0;animation:fadeIn 1s 1.4s forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.hstat{padding:28px 0;text-align:center;border-right:1px solid rgba(201,168,76,0.1);}
+.hstat:last-child{border-right:none;}
+.hstat .n{font-family:var(--serif);font-size:32px;color:var(--gold);font-weight:700;}
+.hstat .l{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* SECTIONS */
+section{padding:120px 60px;}
+.section-label{display:inline-flex;align-items:center;gap:12px;margin-bottom:16px;}
+.section-label-line{width:32px;height:1px;background:var(--gold);}
+.section-label-text{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);}
+.section-title{font-family:var(--serif);font-size:clamp(32px,4.5vw,56px);font-weight:700;line-height:1.1;margin-bottom:20px;}
+.section-sub{color:var(--muted2);font-size:15px;max-width:520px;font-weight:300;line-height:1.9;}
+.gold-rule{width:48px;height:1px;background:var(--gold);margin:28px 0;}
+
+/* ABOUT */
+.about{background:var(--bg2);position:relative;overflow:hidden;}
+.about::before{content:'';position:absolute;right:-200px;top:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.05) 0%,transparent 70%);}
+.about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:100px;align-items:center;max-width:1100px;margin:0 auto;}
+.portrait-frame{position:relative;}
+.portrait-box{aspect-ratio:3/4;background:var(--bg3);border:1px solid rgba(201,168,76,0.15);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.portrait-box::before{content:'';position:absolute;inset:12px;border:1px solid rgba(201,168,76,0.08);}
+.portrait-box svg{opacity:.18;}
+.portrait-accent{position:absolute;bottom:-20px;right:-20px;width:120px;height:120px;border:1px solid var(--gold);opacity:.3;}
+.portrait-badge{position:absolute;top:24px;left:-24px;background:var(--gold);color:var(--bg);padding:12px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;writing-mode:vertical-rl;transform:rotate(180deg);}
+.about-quote-block{margin:32px 0;padding:24px 28px;border-left:2px solid var(--gold);background:rgba(201,168,76,0.03);}
+.about-quote-block p{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--text);line-height:1.7;}
+.cert-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px;}
+.cert{padding:8px 18px;border:1px solid rgba(201,168,76,0.25);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);transition:all .3s;}
+.cert:hover{background:rgba(201,168,76,0.08);border-color:var(--gold);}
+
+/* SERVICES */
+.services{background:var(--bg);position:relative;}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(201,168,76,0.08);margin-top:70px;}
+.svc{background:var(--bg);padding:48px 36px;border-bottom:2px solid transparent;transition:all .4s;cursor:default;position:relative;overflow:hidden;}
+.svc::before{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width .4s;}
+.svc:hover::before{width:100%;}
+.svc:hover{background:var(--bg2);}
+.svc-num{font-family:var(--serif);font-size:11px;color:rgba(201,168,76,0.35);letter-spacing:3px;margin-bottom:28px;}
+.svc-icon-wrap{width:56px;height:56px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;transition:border-color .4s;}
+.svc:hover .svc-icon-wrap{border-color:var(--gold);}
+.svc-icon-wrap svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.svc h3{font-family:var(--serif);font-size:20px;margin-bottom:14px;}
+.svc p{color:var(--muted2);font-size:13px;line-height:1.8;}
+
+/* LISTINGS */
+.listings{background:var(--bg2);}
+.listings-header{display:flex;justify-content:space-between;align-items:flex-end;max-width:1100px;margin:0 auto 60px;flex-wrap:wrap;gap:24px;}
+.listings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,0.08);max-width:1100px;margin:0 auto;}
+.prop-card{background:var(--bg2);overflow:hidden;cursor:pointer;transition:background .3s;}
+.prop-card:hover{background:var(--bg3);}
+.prop-img{aspect-ratio:16/10;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.prop-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(6,6,6,.7));}
+.prop-tag{position:absolute;top:0;left:0;background:var(--gold);color:var(--bg);font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:6px 14px;font-weight:700;z-index:2;}
+.prop-img svg{opacity:.12;}
+.prop-body{padding:28px;}
+.prop-body h3{font-family:var(--serif);font-size:20px;margin-bottom:6px;line-height:1.3;}
+.prop-loc{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+.prop-specs{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(201,168,76,0.1);}
+.prop-specs span{font-size:12px;color:var(--muted2);}
+.prop-price{font-family:var(--serif);font-size:22px;color:var(--gold);font-weight:700;}
+
+/* WHY */
+.whyus{background:var(--bg);position:relative;overflow:hidden;}
+.whyus::after{content:'';position:absolute;left:-300px;bottom:-300px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%);}
+.whyus-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;max-width:1100px;margin:0 auto;}
+.why-items{display:flex;flex-direction:column;gap:0;margin-top:48px;}
+.why-item{display:flex;gap:24px;padding:28px 0;border-bottom:1px solid rgba(201,168,76,0.08);align-items:flex-start;transition:padding .3s;}
+.why-item:hover{padding-left:8px;}
+.why-n{font-family:var(--serif);font-size:36px;color:rgba(201,168,76,0.2);font-weight:700;min-width:48px;line-height:1;}
+.why-item h4{font-size:15px;font-weight:500;margin-bottom:6px;color:var(--text);}
+.why-item p{font-size:13px;color:var(--muted2);line-height:1.7;}
+.stats-panel{background:var(--bg2);border:1px solid rgba(201,168,76,0.12);padding:0;overflow:hidden;}
+.stats-panel-row{display:grid;grid-template-columns:1fr 1fr;}
+.stat-box{padding:44px 36px;border-right:1px solid rgba(201,168,76,0.08);border-bottom:1px solid rgba(201,168,76,0.08);transition:background .3s;}
+.stat-box:hover{background:var(--bg3);}
+.stat-box .big{font-family:var(--serif);font-size:48px;color:var(--gold);font-weight:700;line-height:1;}
+.stat-box .lbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:10px;}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--bg2);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,0.08);margin-top:70px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.tcard{background:var(--bg2);padding:44px 36px;transition:background .3s;}
+.tcard:hover{background:var(--bg3);}
+.tcard-stars{color:var(--gold);font-size:14px;letter-spacing:3px;margin-bottom:20px;}
+.tcard-text{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--text);line-height:1.8;margin-bottom:28px;}
+.tcard-author{display:flex;align-items:center;gap:14px;border-top:1px solid rgba(201,168,76,0.1);padding-top:20px;}
+.tcard-avatar{width:44px;height:44px;border-radius:50%;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;color:var(--gold);font-weight:700;}
+.tcard-name{font-size:14px;font-weight:500;}
+.tcard-role{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* CONTACT */
+.contact{background:var(--bg);position:relative;}
+.contact::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 50%,rgba(201,168,76,0.04) 0%,transparent 70%);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;max-width:1100px;margin:0 auto;position:relative;}
+.cinfo{margin-top:48px;display:flex;flex-direction:column;gap:0;}
+.citem{display:flex;gap:20px;align-items:flex-start;padding:24px 0;border-bottom:1px solid rgba(201,168,76,0.08);}
+.citem-icon{width:44px;height:44px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .3s;}
+.citem:hover .citem-icon{border-color:var(--gold);}
+.citem-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.citem-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.citem-val{font-size:14px;color:var(--muted2);}
+.wa-link{display:inline-flex;align-items:center;gap:12px;background:#25D366;color:#fff;padding:16px 32px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin-top:32px;transition:opacity .3s;}
+.wa-link:hover{opacity:.88;}
+.wa-link svg{width:20px;height:20px;fill:#fff;}
+.form-stack{margin-top:48px;display:flex;flex-direction:column;gap:14px;}
+.form-stack input,.form-stack textarea,.form-stack select{background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.15);color:var(--text);padding:16px 20px;font-family:var(--sans);font-size:14px;width:100%;outline:none;transition:border-color .3s;appearance:none;}
+.form-stack input::placeholder,.form-stack textarea::placeholder{color:var(--muted);}
+.form-stack input:focus,.form-stack textarea:focus,.form-stack select:focus{border-color:var(--gold);}
+.form-stack select{color:var(--muted);}
+.form-stack textarea{resize:vertical;min-height:130px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.submit-btn{background:var(--gold);color:var(--bg);padding:18px;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;border:none;width:100%;cursor:pointer;transition:background .3s;position:relative;overflow:hidden;}
+.submit-btn:hover{background:var(--gold2);}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid rgba(201,168,76,0.1);padding:70px 60px 40px;text-align:center;}
+.footer-logo{font-family:var(--serif);font-size:32px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;}
+.footer-tagline{font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-bottom:40px;}
+.footer-nav{display:flex;gap:40px;justify-content:center;list-style:none;margin-bottom:40px;flex-wrap:wrap;}
+.footer-nav a{color:var(--muted2);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:color .3s;}
+.footer-nav a:hover{color:var(--gold);}
+.footer-divider{width:100%;height:1px;background:rgba(201,168,76,0.08);margin-bottom:28px;}
+.footer-copy{font-size:12px;color:var(--muted);}
+
+/* ARABIC MODE */
+body.ar{font-family:var(--arabic);direction:rtl;}
+body.ar .hero h1,.body.ar .section-title,.body.ar .footer-logo{font-family:var(--arabic);}
+body.ar .about-quote-block p,.body.ar .tcard-text{font-family:var(--arabic);font-style:normal;}
+body.ar .portrait-badge{writing-mode:horizontal-tb;transform:none;top:auto;bottom:-20px;left:50%;transform:translateX(-50%);right:auto;}
+body.ar .gold-rule{margin-right:0;}
+body.ar .section-label{flex-direction:row-reverse;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:16px 24px;}
+  .nav-links,.lang-toggle{display:none;}
+  section{padding:80px 24px;}
+  .about-grid,.whyus-grid,.contact-grid{grid-template-columns:1fr;gap:48px;}
+  .services-grid,.listings-grid,.testi-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:48px;}
+  .hero-stats-bar{display:none;}
+  .stats-panel-row{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+  footer{padding:48px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANG OVERLAY -->
+<div class="lang-overlay" id="langOverlay">
+  <div class="lang-overlay-title">Altatweer Real Estate</div>
+  <div class="lang-overlay-sub">Choose your language · اختر لغتك</div>
+  <div style="display:flex;gap:0;">
+    <button class="lang-btn" style="padding:16px 48px;font-size:14px;letter-spacing:3px;" onclick="chooseLang('en')">English</button>
+    <button class="lang-btn" style="padding:16px 48px;font-size:16px;letter-spacing:1px;font-family:'Tajawal',sans-serif;" onclick="chooseLang('ar')">عربي</button>
+  </div>
+</div>
+
+<!-- LANG TOGGLE (persistent) -->
+<div class="lang-toggle" id="langToggle" style="position:fixed;top:22px;right:180px;z-index:9999;display:none;">
+  <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" id="btnAr" onclick="setLang('ar')">عربي</button>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">Altatweer<span data-en="Real Estate" data-ar="للعقارات">Real Estate</span></a>
+  <ul class="nav-links">
+    <li><a href="#about" data-en="About" data-ar="عن المكتب">About</a></li>
+    <li><a href="#services" data-en="Services" data-ar="الخدمات">Services</a></li>
+    <li><a href="#listings" data-en="Listings" data-ar="العقارات">Listings</a></li>
+    <li><a href="#contact" data-en="Contact" data-ar="تواصل معنا">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta" data-en="Book Consultation" data-ar="احجز استشارة">Book Consultation</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="gold-orb"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text" data-en="Premium Real Estate · Riyadh · KSA" data-ar="عقارات فاخرة · الرياض · المملكة العربية السعودية">Premium Real Estate · Riyadh · KSA</span>
+      <div class="hero-eyebrow-line"></div>
+    </div>
+    <h1>
+      <span class="line" data-en="Redefining" data-ar="نُعيد تعريف">Redefining</span>
+      <span class="line"><em data-en="Luxury" data-ar="الفخامة">Luxury</em></span>
+      <span class="line outline-text" data-en="Living." data-ar="والحياة.">Living.</span>
+    </h1>
+    <p class="hero-sub" data-en="Omar Alsuhail and the Altatweer team deliver unmatched expertise in residential, commercial, and investment real estate across the Kingdom." data-ar="عمر السهيل وفريق التطوير يقدمون خبرة لا مثيل لها في العقارات السكنية والتجارية والاستثمارية في جميع أنحاء المملكة.">Omar Alsuhail and the Altatweer team deliver unmatched expertise in residential, commercial, and investment real estate across the Kingdom.</p>
+    <div class="hero-btns">
+      <a href="#listings" class="btn-gold"><span data-en="Explore Properties" data-ar="استعرض العقارات">Explore Properties</span></a>
+      <a href="#contact" class="btn-ghost" data-en="Book Consultation" data-ar="احجز استشارة">Book Consultation</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><div class="scroll-text" data-en="Scroll" data-ar="انزل">Scroll</div></div>
+  <div class="hero-stats-bar">
+    <div class="hstat"><div class="n">320+</div><div class="l" data-en="Properties Sold" data-ar="عقار مُباع">Properties Sold</div></div>
+    <div class="hstat"><div class="n">15+</div><div class="l" data-en="Years Experience" data-ar="سنة خبرة">Years Experience</div></div>
+    <div class="hstat"><div class="n">98%</div><div class="l" data-en="Client Satisfaction" data-ar="رضا العملاء">Client Satisfaction</div></div>
+    <div class="hstat"><div class="n">SAR 2B+</div><div class="l" data-en="Total Transactions" data-ar="إجمالي الصفقات">Total Transactions</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="portrait-frame">
+      <div class="portrait-box">
+        <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="52" r="34" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M10 140c0-33.137 26.863-60 60-60s60 26.863 60 60" stroke="#C9A84C" stroke-width="1.5"/>
+        </svg>
+        <div class="portrait-badge" data-en="Broker" data-ar="وسيط عقاري">Broker</div>
+      </div>
+      <div class="portrait-accent"></div>
+    </div>
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><div class="section-label-text" data-en="About the Broker" data-ar="عن الوسيط">About the Broker</div></div>
+      <h2 class="section-title" data-en="Omar Alsuhail" data-ar="عمر السهيل">Omar Alsuhail</h2>
+      <div class="gold-rule"></div>
+      <p style="color:var(--muted2);font-size:15px;line-height:1.9;margin-bottom:24px;" data-en="A licensed real estate professional with over 15 years of experience in Riyadh's most prestigious markets. Omar brings an unrivaled understanding of the Saudi property landscape — from luxury residential villas to large-scale commercial and investment opportunities." data-ar="وسيط عقاري مرخص بخبرة تزيد عن 15 عامًا في أكثر أسواق الرياض تميزًا. يمتلك عمر فهمًا لا مثيل له لسوق العقارات السعودية — من الفلل السكنية الفاخرة إلى الفرص التجارية والاستثمارية الكبرى.">A licensed real estate professional with over 15 years of experience in Riyadh's most prestigious markets. Omar brings an unrivaled understanding of the Saudi property landscape — from luxury residential villas to large-scale commercial and investment opportunities.</p>
+      <div class="about-quote-block">
+        <p data-en='"I don\'t just sell properties — I help my clients build legacies. Every deal is built on trust, expertise, and exceptional results."' data-ar='"أنا لا أبيع عقارات فحسب — أساعد عملائي في بناء إرث يدوم. كل صفقة تقوم على الثقة والخبرة والنتائج الاستثنائية."'>"I don't just sell properties — I help my clients build legacies. Every deal is built on trust, expertise, and exceptional results."</p>
+      </div>
+      <div class="cert-row">
+        <div class="cert" data-en="CGSP Certified" data-ar="شهادة CGSP">CGSP Certified</div>
+        <div class="cert" data-en="Vision 2030 Partner" data-ar="شريك رؤية 2030">Vision 2030 Partner</div>
+        <div class="cert" data-en="FAL Licensed" data-ar="مرخص فال">FAL Licensed</div>
+        <div class="cert" data-en="Hadaf Alumni" data-ar="خريج هدف">Hadaf Alumni</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <div class="section-label" style="justify-content:center;"><div class="section-label-line"></div><div class="section-label-text" data-en="Our Services" data-ar="خدماتنا">Our Services</div><div class="section-label-line"></div></div>
+    <h2 class="section-title" data-en="What We Offer" data-ar="ما نقدمه">What We Offer</h2>
+    <p class="section-sub" style="margin:0 auto;" data-en="Comprehensive real estate solutions across all sectors of the Saudi market — delivered with precision, discretion, and excellence." data-ar="حلول عقارية شاملة في جميع قطاعات السوق السعودي — تُقدَّم بدقة واحترافية وتميز.">Comprehensive real estate solutions across all sectors of the Saudi market.</p>
+  </div>
+  <div class="services-grid" style="max-width:1100px;margin:70px auto 0;">
+    <div class="svc">
+      <div class="svc-num">01</div>
+      <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+      <h3 data-en="Residential" data-ar="السكني">Residential</h3>
+      <p data-en="Luxury villas, apartments, and townhouses in Riyadh's most sought-after neighborhoods — Al Narjis, Al Yasmin, and Hittin." data-ar="فلل وشقق وتاون هاوس فاخرة في أرقى أحياء الرياض — النرجس، الياسمين، وحطين.">Luxury villas, apartments, and townhouses in Riyadh's most sought-after neighborhoods — Al Narjis, Al Yasmin, and Hittin.</p>
+    </div>
+    <div class="svc">
+      <div class="svc-num">02</div>
+      <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+      <h3 data-en="Commercial" data-ar="التجاري">Commercial</h3>
+      <p data-en="Premium office towers, retail spaces, and showrooms in prime commercial districts across Riyadh and the Kingdom." data-ar="أبراج مكتبية ومحلات تجارية وصالات عرض في أبرز المناطق التجارية بالرياض والمملكة.">Premium office towers, retail spaces, and showrooms in prime commercial districts across Riyadh and the Kingdom.</p>
+    </div>
+    <div class="svc">
+      <div class="svc-num">03</div>
+      <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><polygon points="12,2 2,7 12,12 22,7"/><polyline points="2,17 12,22 22,17"/><polyline points="2,12 12,17 22,12"/></svg></div>
+      <h3 data-en="Land & Investment" data-ar="الأراضي والاستثمار">Land & Investment</h3>
+      <p data-en="Strategic land parcels with exceptional development potential across Riyadh — ideal for developers and portfolio investors." data-ar="قطع أراضي استراتيجية ذات إمكانات تطويرية استثنائية في جميع أنحاء الرياض — مثالية للمطورين والمستثمرين.">Strategic land parcels with exceptional development potential across Riyadh — ideal for developers and portfolio investors.</p>
+    </div>
+    <div class="svc">
+      <div class="svc-num">04</div>
+      <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <h3 data-en="Portfolio Advisory" data-ar="الاستشارات الاستثمارية">Portfolio Advisory</h3>
+      <p data-en="Personalized investment strategies aligned with Vision 2030. We help you identify, evaluate, and grow your real estate portfolio." data-ar="استراتيجيات استثمارية مخصصة متوافقة مع رؤية 2030. نساعدك على تحديد وتقييم وتنمية محفظتك العقارية.">Personalized investment strategies aligned with Vision 2030. We help you identify, evaluate, and grow your real estate portfolio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="listings" id="listings">
+  <div class="listings-header">
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><div class="section-label-text" data-en="Featured Properties" data-ar="عقارات مميزة">Featured Properties</div></div>
+      <h2 class="section-title" data-en="Exclusive Listings" data-ar="قائمة حصرية">Exclusive Listings</h2>
+    </div>
+    <a href="#contact" class="btn-ghost" style="font-size:11px;padding:14px 28px;" data-en="View All" data-ar="عرض الكل">View All</a>
+  </div>
+  <div class="listings-grid">
+    <div class="prop-card">
+      <div class="prop-img"><div class="prop-tag" data-en="Villa · For Sale" data-ar="فيلا · للبيع">Villa · For Sale</div><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+      <div class="prop-body">
+        <h3 data-en="Grand Villa — Al Narjis" data-ar="فيلا فاخرة — النرجس">Grand Villa — Al Narjis</h3>
+        <div class="prop-loc" data-en="Al Narjis, North Riyadh" data-ar="النرجس، شمال الرياض">Al Narjis, North Riyadh</div>
+        <div class="prop-specs"><span data-en="6 Beds" data-ar="6 غرف">6 Beds</span><span>·</span><span data-en="7 Baths" data-ar="7 حمامات">7 Baths</span><span>·</span><span>1,200 m²</span></div>
+        <div class="prop-price">SAR 8,500,000</div>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-img"><div class="prop-tag" data-en="Office · For Lease" data-ar="مكتب · للإيجار">Office · For Lease</div><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+      <div class="prop-body">
+        <h3 data-en="Premium Office — King Fahd Rd" data-ar="مكتب متميز — طريق الملك فهد">Premium Office — King Fahd Rd</h3>
+        <div class="prop-loc" data-en="King Fahd Road, Riyadh" data-ar="طريق الملك فهد، الرياض">King Fahd Road, Riyadh</div>
+        <div class="prop-specs"><span data-en="Floor 14" data-ar="الدور 14">Floor 14</span><span>·</span><span>450 m²</span><span>·</span><span data-en="Full Fit-Out" data-ar="مجهز بالكامل">Full Fit-Out</span></div>
+        <div class="prop-price">SAR 320,000 / yr</div>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-img"><div class="prop-tag" data-en="Land · For Sale" data-ar="أرض · للبيع">Land · For Sale</div><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1"><polygon points="12,2 2,7 12,12 22,7"/><polyline points="2,17 12,22 22,17"/></svg></div>
+      <div class="prop-body">
+        <h3 data-en="Investment Land — Al Narjis" data-ar="أرض استثمارية — النرجس">Investment Land — Al Narjis</h3>
+        <div class="prop-loc" data-en="Al Narjis, Riyadh" data-ar="النرجس، الرياض">Al Narjis, Riyadh</div>
+        <div class="prop-specs"><span>80,000 m²</span><span>·</span><span data-en="Commercial Zone" data-ar="منطقة تجارية">Commercial Zone</span></div>
+        <div class="prop-price">SAR 45,000,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="whyus">
+  <div class="whyus-grid">
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><div class="section-label-text" data-en="Why Choose Us" data-ar="لماذا نحن">Why Choose Us</div></div>
+      <h2 class="section-title" data-en="The Altatweer Difference" data-ar="ما يميّز التطوير">The Altatweer Difference</h2>
+      <div class="gold-rule"></div>
+      <p style="color:var(--muted2);font-size:15px;line-height:1.9;" data-en="We combine deep market intelligence with a client-first philosophy to deliver results that consistently exceed expectations." data-ar="نجمع بين ذكاء السوق العميق وفلسفة تضع العميل في المقدمة لتحقيق نتائج تتجاوز التوقعات باستمرار.">We combine deep market intelligence with a client-first philosophy to deliver results that consistently exceed expectations.</p>
+      <div class="why-items">
+        <div class="why-item"><div class="why-n">01</div><div><h4 data-en="Market Intelligence" data-ar="ذكاء السوق">Market Intelligence</h4><p data-en="Proprietary data and on-the-ground expertise across all Riyadh districts and major Saudi cities." data-ar="بيانات حصرية وخبرة ميدانية في جميع أحياء الرياض والمدن السعودية الكبرى.">Proprietary data and on-the-ground expertise across all Riyadh districts and major Saudi cities.</p></div></div>
+        <div class="why-item"><div class="why-n">02</div><div><h4 data-en="Exclusive Network" data-ar="شبكة حصرية">Exclusive Network</h4><p data-en="Access to off-market listings and premium properties not available through traditional channels." data-ar="الوصول إلى عقارات خارج السوق وعروض مميزة لا تتوفر عبر القنوات التقليدية.">Access to off-market listings and premium properties not available through traditional channels.</p></div></div>
+        <div class="why-item"><div class="why-n">03</div><div><h4 data-en="End-to-End Service" data-ar="خدمة متكاملة">End-to-End Service</h4><p data-en="From search to signing — legal, financial, and post-sale support all under one roof." data-ar="من البحث حتى التوقيع — الدعم القانوني والمالي وما بعد البيع تحت سقف واحد.">From search to signing — legal, financial, and post-sale support all under one roof.</p></div></div>
+      </div>
+    </div>
+    <div class="stats-panel">
+      <div class="stats-panel-row">
+        <div class="stat-box"><div class="big">320+</div><div class="lbl" data-en="Deals Closed" data-ar="صفقة مُنجزة">Deals Closed</div></div>
+        <div class="stat-box" style="border-right:none;"><div class="big">15+</div><div class="lbl" data-en="Years Active" data-ar="سنة نشاط">Years Active</div></div>
+      </div>
+      <div class="stats-panel-row">
+        <div class="stat-box" style="border-bottom:none;"><div class="big">2B+</div><div class="lbl" data-en="SAR Volume" data-ar="ريال حجم الصفقات">SAR Volume</div></div>
+        <div class="stat-box" style="border-right:none;border-bottom:none;"><div class="big">98%</div><div class="lbl" data-en="Satisfaction" data-ar="رضا العملاء">Satisfaction</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div style="text-align:center;max-width:560px;margin:0 auto;">
+    <div class="section-label" style="justify-content:center;"><div class="section-label-line"></div><div class="section-label-text" data-en="Client Stories" data-ar="تجارب عملائنا">Client Stories</div><div class="section-label-line"></div></div>
+    <h2 class="section-title" data-en="What Our Clients Say" data-ar="ماذا يقول عملاؤنا">What Our Clients Say</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-text" data-en='"Omar\'s knowledge of Al Narjis was exceptional. He found us our dream villa within two weeks and handled every detail flawlessly."' data-ar='"معرفة عمر بحي النرجس كانت استثنائية. وجد لنا فيلا أحلامنا في أسبوعين وتولى كل التفاصيل باحترافية تامة."'>"Omar's knowledge of Al Narjis was exceptional. He found us our dream villa within two weeks and handled every detail flawlessly."</p>
+      <div class="tcard-author"><div class="tcard-avatar">KA</div><div><div class="tcard-name" data-en="Khalid Al-Anazi" data-ar="خالد العنزي">Khalid Al-Anazi</div><div class="tcard-role" data-en="Business Owner, Riyadh" data-ar="رجل أعمال، الرياض">Business Owner, Riyadh</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-text" data-en='"We trusted Altatweer with our full commercial portfolio. The market insights and negotiation skills saved us millions."' data-ar='"أوكلنا إلى التطوير محفظتنا التجارية بالكامل. رؤيتهم للسوق ومهارات التفاوض وفّرت علينا الملايين."'>"We trusted Altatweer with our full commercial portfolio. The market insights and negotiation skills saved us millions."</p>
+      <div class="tcard-author"><div class="tcard-avatar">NM</div><div><div class="tcard-name" data-en="Nora Al-Mutairi" data-ar="نورة المطيري">Nora Al-Mutairi</div><div class="tcard-role" data-en="Investment Director" data-ar="مديرة استثمار">Investment Director</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-text" data-en='"From the first call to closing, the service was impeccable. Omar understood exactly what we needed and delivered beyond expectations."' data-ar='"من المكالمة الأولى حتى الإغلاق، كانت الخدمة لا تشوبها شائبة. فهم عمر بالضبط ما احتجناه وقدم ما هو أكثر مما توقعنا."'>"From the first call to closing, the service was impeccable. Omar understood exactly what we needed and delivered beyond expectations."</p>
+      <div class="tcard-author"><div class="tcard-avatar">FA</div><div><div class="tcard-name" data-en="Faisal Al-Rashidi" data-ar="فيصل الراشدي">Faisal Al-Rashidi</div><div class="tcard-role" data-en="Developer, Riyadh" data-ar="مطور عقاري، الرياض">Developer, Riyadh</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div style="text-align:center;max-width:560px;margin:0 auto;">
+    <div class="section-label" style="justify-content:center;"><div class="section-label-line"></div><div class="section-label-text" data-en="Get in Touch" data-ar="تواصل معنا">Get in Touch</div><div class="section-label-line"></div></div>
+    <h2 class="section-title" data-en="Start Your Property Journey" data-ar="ابدأ رحلتك العقارية">Start Your Property Journey</h2>
+  </div>
+  <div class="contact-grid" style="margin-top:70px;">
+    <div>
+      <div class="cinfo">
+        <div class="citem"><div class="citem-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="citem-label" data-en="Phone" data-ar="الهاتف">Phone</div><div class="citem-val">+966 5X XXX XXXX</div></div></div>
+        <div class="citem"><div class="citem-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="citem-label" data-en="Email" data-ar="البريد الإلكتروني">Email</div><div class="citem-val">omar@altatweer.sa</div></div></div>
+        <div class="citem"><div class="citem-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="citem-label" data-en="Location" data-ar="الموقع">Location</div><div class="citem-val" data-en="Riyadh, Saudi Arabia" data-ar="الرياض، المملكة العربية السعودية">Riyadh, Saudi Arabia</div></div></div>
+      </div>
+      <a href="https://wa.me/9665XXXXXXXX" class="wa-link">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span data-en="Chat on WhatsApp" data-ar="تواصل عبر واتساب">Chat on WhatsApp</span>
+      </a>
+    </div>
+    <div class="form-stack">
+      <div class="form-row">
+        <input type="text" placeholder="Full Name" data-placeholder-en="Full Name" data-placeholder-ar="الاسم الكامل"/>
+        <input type="tel" placeholder="Phone Number" data-placeholder-en="Phone Number" data-placeholder-ar="رقم الهاتف"/>
+      </div>
+      <input type="email" placeholder="Email Address" data-placeholder-en="Email Address" data-placeholder-ar="البريد الإلكتروني"/>
+      <select>
+        <option data-en="Select Property Type" data-ar="اختر نوع العقار">Select Property Type</option>
+        <option data-en="Residential Villa" data-ar="فيلا سكنية">Residential Villa</option>
+        <option data-en="Apartment" data-ar="شقة">Apartment</option>
+        <option data-en="Commercial Space" data-ar="مساحة تجارية">Commercial Space</option>
+        <option data-en="Land / Investment" data-ar="أرض / استثمار">Land / Investment</option>
+        <option data-en="General Inquiry" data-ar="استفسار عام">General Inquiry</option>
+      </select>
+      <textarea placeholder="Tell us about your requirements..." data-placeholder-en="Tell us about your requirements..." data-placeholder-ar="أخبرنا عن متطلباتك..."></textarea>
+      <button class="submit-btn" data-en="Send Inquiry" data-ar="إرسال الاستفسار">Send Inquiry</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Altatweer</div>
+  <div class="footer-tagline" data-en="Real Estate · Riyadh · Est. 2010" data-ar="للعقارات · الرياض · تأسس 2010">Real Estate · Riyadh · Est. 2010</div>
+  <ul class="footer-nav">
+    <li><a href="#about" data-en="About" data-ar="عن المكتب">About</a></li>
+    <li><a href="#services" data-en="Services" data-ar="الخدمات">Services</a></li>
+    <li><a href="#listings" data-en="Listings" data-ar="العقارات">Listings</a></li>
+    <li><a href="#contact" data-en="Contact" data-ar="تواصل">Contact</a></li>
+  </ul>
+  <div class="footer-divider"></div>
+  <div class="footer-copy" data-en="© 2025 Altatweer Real Estate · Omar Alsuhail · All Rights Reserved" data-ar="© 2025 التطوير للعقارات · عمر السهيل · جميع الحقوق محفوظة">© 2025 Altatweer Real Estate · Omar Alsuhail · All Rights Reserved</div>
+</footer>
+
+<script>
+function chooseLang(lang) {
+  document.getElementById('langOverlay').style.display = 'none';
+  document.getElementById('langToggle').style.display = 'flex';
+  setLang(lang);
+}
+
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+function setLang(lang) {
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  document.getElementById('btnAr').classList.toggle('active', lang === 'ar');
+
+  const isAr = lang === 'ar';
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+  document.body.classList.toggle('ar', isAr);
+
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const txt = el.getAttribute(isAr ? 'data-ar' : 'data-en');
+    if (txt) el.textContent = txt;
+  });
+
+  document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+    el.placeholder = el.getAttribute(isAr ? 'data-placeholder-ar' : 'data-placeholder-en');
+  });
+
+  document.querySelectorAll('select option[data-en]').forEach(opt => {
+    const txt = opt.getAttribute(isAr ? 'data-ar' : 'data-en');
+    if (txt) opt.textContent = txt;
+  });
+}
+</script>
+</body>
+</html>
